@@ -3515,6 +3515,7 @@ const (
 	ServiceCheckHTTP   = "http"
 	ServiceCheckTCP    = "tcp"
 	ServiceCheckScript = "script"
+	ServiceCheckGRPC   = "grpc"
 
 	// minCheckInterval is the minimum check interval permitted.  Consul
 	// currently has its MinInterval set to 1s.  Mirror that here for
@@ -3544,6 +3545,8 @@ type ServiceCheck struct {
 	Method        string              // HTTP Method to use (GET by default)
 	Header        map[string][]string // HTTP Headers for Consul to set when making HTTP checks
 	CheckRestart  *CheckRestart       // If and when a task should be restarted based on checks
+	GRPC          string              // Endpoint for GRPC checks
+	GRPCUseTLS    bool                // Whether or not to use TLS for GRPC checks
 }
 
 func (sc *ServiceCheck) Copy() *ServiceCheck {
@@ -3601,6 +3604,12 @@ func (sc *ServiceCheck) validate() error {
 		if sc.Command == "" {
 			return fmt.Errorf("script type must have a valid script path")
 		}
+
+	case ServiceCheckGRPC:
+		if sc.GRPC == "" {
+			return fmt.Errorf("grpc type must have a valid endpoint")
+		}
+
 	default:
 		return fmt.Errorf(`invalid type (%+q), must be one of "http", "tcp", or "script" type`, sc.Type)
 	}
