@@ -1,3 +1,8 @@
+## 0.8.4 (Unreleased)
+
+IMPROVEMENTS:
+ * cli: Add node drain details to node status
+
 ## 0.8.3 (April 27, 2018)
 
 BUG FIXES:
